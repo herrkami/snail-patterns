@@ -15,18 +15,18 @@ import Tkinter, numpy, random, math
 
 # /////// WINDOW SETTINGS AND ELEMENTARY GRAPHIC FUNCTIONS ///////
 
-size = 100 #number of cells 
-duration = 80 #number of time steps 
-cell_width = 3 
-cell_duration = 3  
+size = 200 #number of cells 
+duration = 120 #number of time steps 
+cell_width = 2 
+cell_duration = 2  
 canvas_width = size * cell_width #full width of the canvas in pixels 
 canvas_height = duration * cell_duration 
 
 # Window 
 snail_window = Tkinter.Tk() #create GUI
 snail_window.title("snail_v1_r0.py") 
-snail_window.geometry('+600+50') #get the window away from the corner
-snail_window.configure(background='white') 
+snail_window.geometry('+10+20') #get the window away from the corner
+# snail_window.configure(background='white') 
 
 # Canvas 
 snail_canvas = Tkinter.Canvas(snail_window, width = canvas_width, height = canvas_height)
@@ -64,44 +64,39 @@ a = numpy.ones((size,duration), float)
 b = numpy.ones((size,duration), float)
 #c = numpy.ones((size,duration), float) 
 
-# Diffusion 
-Da = 0.005 #Dx > 0.4 leads to numerical instability (meinhardt) 
-Db = 0.4 # 0.5 gave kind of chess pattern
-#Dc = 
+# Init Parameters 
+def initParameters(): 
+	DaSlider.set(0.162) # Diffusion 
+	DbSlider.set(0.397)
+        RaSlider.set(0.559) # Decay 
+        RbSlider.set(0.235)
+        BaSlider.set(0.049) # Steady state production 
+        BbSlider.set(0.088)
+        SaSlider.set(0.2) # Saturation 
+        SbSlider.set(0.9)
+        CaSlider.set(0.368) # Coupling 
+        GaSlider.set(0.147) # Initial concentration 
+        GbSlider.set(0.5)
+        InitialNoiseSlider.set(0.2) # Initial noise 
 
-# Decay 
-Ra = 0.1
-Rb = 0.1
-#Rc = 
+# Read sliders 
+def readSliders(): 
+	global Da, Db, Ra, Rb, Ba, Bb, Sa, Sb, Ca, Ga, Gb, InitialNoise 
+	Da = DaSlider.get() # Diffusion 
+	Db = DbSlider.get()
+	Ra = RaSlider.get() # Decay 
+	Rb = RbSlider.get()
+	Ba = BaSlider.get() # Steady state production 
+	Bb = BaSlider.get()
+	Sa = SaSlider.get() # Saturation 
+	Sb = SbSlider.get()
+	Ca = CaSlider.get() # Coupling 
+	Ga = GaSlider.get() # Initial concentration 
+	Gb = GbSlider.get()
+	InitialNoise = InitialNoiseSlider.get() # Initial noise 
 
-# Steady state production 
-Ba = 0.4
-Bb = 0.1 # is x-dependent in some cases (chapter 4) 
-#Bc = 
-
-# Saturation, interactions, Michaelis-Menten constant  
-Sa = 0.3
-Sb = 0.9
-#Sc = 
-
-# Coupling or source density ('s' in the book) 
-Ca = 0.08 # 0.055 was interesting
-
-# Cell specific initial concentrations (arrays) 
-#Aa = 
-#AB = 
-#Ac = 
-
-# General initial concentrations 
-Ga = 0.5 # TODO: 	For x-dependent concentrations they should become arrays, 
-Gb = 0.5 # 		which would also affect initSubstance( , ).  
-#Gc = 
-
-# Initial Noise parameter 
-InitialNoise = 0.2
-
-
-# /////// USER INTERFACE ///////
+Da, Db, Ra, Rb, Ba, Bb, Sa, Sb, Ca, Ga, Gb, InitialNoise = .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5
+#readSliders()
 
 # /////// FUNCTIONS AND METHODS OF THE SIMULATION ///////
 
@@ -139,39 +134,128 @@ def dbActivSubs(i, t):
 	A , B = a[i, t], b[i, t]
 	return (Bb* - Ca*B*((A*A / (1 + Sa*A*A)) + Ba) - Rb + Db*diffusion(b, i, t))  
 
-
-# /////// MAIN FUNCTION AND LOOP ///////
-
 # Dummy functions
 def dummyMain(): 
 	setCell(int(random.random()*size),int(random.random()*duration),random.random())
 	snail_window.after(1,dummyMain) 
 
+
+# /////// DUMMY FUNCTIONS ///////
+
 def dummySnail(): 
 	initSubstance(a, Ga) 
-	initSubstance(b, Gb)
+	initSubstance(b, Gb) 
+	readSliders() 
+	print_case = print_mode.get() 
 	for t in range(duration-1): 
 		for i in range(size):
-			a[i, t+1] = a[i, t] + daActivSubs(i, t) 
+			# calculate a 
+			a[i, t+1] = a[i, t] + daActivInhib(i, t) 
 			if a[i, t+1] >= 1: 
 				a[i, t+1] = 1
 			if a[i, t+1] < 0: 
 				a[i, t+1] = 0 
-			b[i, t+1] = b[i, t] + dbActivSubs(i, t)
+			# calculate b 
+			b[i, t+1] = b[i, t] + dbActivInhib(i, t)
 			if b[i, t+1] >= 1:
 				b[i, t+1] = 1
 			if b[i, t+1] < 0:
 				b[i, t+1] = 0
-#			setCellColors(i, t+1, a[i, t+1], b[i, t+1]) 
-#			setCellDiff(i, t+1, a[i, t+1], b[i, t+1])
-			setCell(i, t+1, a[i, t+1]) 
-		print duration - t 	
+			# print line 
+			# maybe this can be done in a loop that runs after each line:
+			if print_case == "color":
+				setCellColors(i, t+1, a[i, t+1], b[i, t+1]) 
+			elif print_case == "diff": 
+				setCellDiff(i, t+1, a[i, t+1], b[i, t+1]) 
+			elif print_case == "b/w": 
+				setCell(i, t+1, a[i, t+1])
+		snail_window.update() 	
 
-#dummyMain()
+
+# /////// USER INTERFACE ///////
+
+# Start button
+start_control = Tkinter.Frame(snail_window) 
+start_control.pack(side="left") 
+StartButton = Tkinter.Button(start_control, text = "SIM", width = 3, command = dummySnail)
+StartButton.pack(side="top") 
+# Print mode menu 
+print_mode = Tkinter.StringVar(start_control) 
+print_mode.set("b/w") 
+print_menu = Tkinter.OptionMenu(start_control, print_mode, "b/w", "diff", "color") 
+print_menu.pack() 
+# Diffusion 
+diff_control = Tkinter.Frame(snail_window)
+diff_control.pack() 
+diff_label = Tkinter.Label(diff_control, text="Diffusion:   ")
+diff_label.pack(side="left")
+DaSlider = Tkinter.Scale(diff_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+DaSlider.pack(side="left")
+DbSlider = Tkinter.Scale(diff_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+DbSlider.pack(side="left")
+# Decay 
+decay_control = Tkinter.Frame(snail_window)
+decay_control.pack()
+decay_label = Tkinter.Label(decay_control, text="Decay:       ")
+decay_label.pack(side="left")
+RaSlider = Tkinter.Scale(decay_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+RaSlider.pack(side="left")
+RbSlider = Tkinter.Scale(decay_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+RbSlider.pack(side="left")
+# Steady state production
+steady_control = Tkinter.Frame(snail_window)
+steady_control.pack() 
+steady_label = Tkinter.Label(steady_control, text="Basal prod.: ")
+steady_label.pack(side="left")
+BaSlider = Tkinter.Scale(steady_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+BaSlider.pack(side="left")
+BbSlider = Tkinter.Scale(steady_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+BbSlider.pack(side="left")
+# Saturation 
+sat_control = Tkinter.Frame(snail_window)
+sat_control.pack()
+sat_label = Tkinter.Label(sat_control, text="Saturation:  ")
+sat_label.pack(side="left")
+SaSlider = Tkinter.Scale(sat_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+SaSlider.pack(side="left")
+SbSlider = Tkinter.Scale(sat_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+SbSlider.pack(side="left")
+# Coupling
+coupling_control = Tkinter.Frame(snail_window)
+coupling_control.pack()
+coupling_label = Tkinter.Label(coupling_control, text="Coupling:    ")
+coupling_label.pack(side="left")
+CaSlider = Tkinter.Scale(coupling_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+CaSlider.pack(side="left")
+coupling_spacer = Tkinter.Frame(coupling_control, width=100) 
+coupling_spacer.pack(side="left")
+# Initial concentration 
+concen_control = Tkinter.Frame(snail_window)
+concen_control.pack()
+concen_label = Tkinter.Label(concen_control, text="Init. conc.: ")
+concen_label.pack(side="left")
+GaSlider = Tkinter.Scale(concen_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+GaSlider.pack(side="left")
+GbSlider = Tkinter.Scale(concen_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+GbSlider.pack(side="left")
+# Initial noise
+noise_control = Tkinter.Frame(snail_window)
+noise_control.pack()
+noise_label = Tkinter.Label(noise_control, text="Init. noise: ")
+noise_label.pack(side="left")
+InitialNoiseSlider = Tkinter.Scale(noise_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+InitialNoiseSlider.pack(side="left")
+noise_spacer = Tkinter.Frame(noise_control, width=100) 
+noise_spacer.pack(side="left")
+
+
+# /////// MAIN FUNCTION AND LOOP ///////
+
+#dummyMain() 
+initParameters() 
 dummySnail() 
+#snail_window.after(1, dummySnail())  
 snail_window.mainloop()
-
-
 
 
 

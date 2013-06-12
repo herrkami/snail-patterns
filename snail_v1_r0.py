@@ -15,10 +15,10 @@ import Tkinter, numpy, random, math
 
 # /////// WINDOW SETTINGS AND ELEMENTARY GRAPHIC FUNCTIONS ///////
 
-size = 200 #number of cells 
-duration = 120 #number of time steps 
-cell_width = 2 
-cell_duration = 2  
+size = 400 #number of cells 
+duration = 400 #number of time steps 
+cell_width = 1 
+cell_duration = 1  
 canvas_width = size * cell_width #full width of the canvas in pixels 
 canvas_height = duration * cell_duration 
 
@@ -62,40 +62,46 @@ def setCellDiff(i, t, subs1, subs2):
 # Arrays of activator, inhibitor, interactor,...
 a = numpy.ones((size,duration), float)
 b = numpy.ones((size,duration), float)
-#c = numpy.ones((size,duration), float) 
+c = numpy.ones((size,duration), float) 
 
 # Init Parameters 
 def initParameters(): 
-	DaSlider.set(0.162) # Diffusion 
-	DbSlider.set(0.397)
-        RaSlider.set(0.559) # Decay 
-        RbSlider.set(0.235)
-        BaSlider.set(0.049) # Steady state production 
-        BbSlider.set(0.088)
+	DaSlider.set(0.279) # Diffusion 
+	DbSlider.set(0.588)
+	DcSlider.set(0.485) # phase transition at 510
+        RaSlider.set(0.618) # Decay 
+        RbSlider.set(0.353)
+	RcSlider.set(0.544)
+        BaSlider.set(0.044) # Steady state production 
+        BbSlider.set(0.044)
         SaSlider.set(0.2) # Saturation 
         SbSlider.set(0.9)
-        CaSlider.set(0.368) # Coupling 
-        GaSlider.set(0.147) # Initial concentration 
+        CaSlider.set(0.412) # Coupling 
+        GaSlider.set(0.250) # Initial concentration 
         GbSlider.set(0.5)
+	GcSlider.set(0.5)
         InitialNoiseSlider.set(0.2) # Initial noise 
 
 # Read sliders 
 def readSliders(): 
-	global Da, Db, Ra, Rb, Ba, Bb, Sa, Sb, Ca, Ga, Gb, InitialNoise 
+	global Da, Db, Dc, Ra, Rb, Rc, Ba, Bb, Sa, Sb, Ca, Ga, Gb, Gc, InitialNoise 
 	Da = DaSlider.get() # Diffusion 
 	Db = DbSlider.get()
+	Dc = DcSlider.get()
 	Ra = RaSlider.get() # Decay 
 	Rb = RbSlider.get()
+	Rc = RcSlider.get()
 	Ba = BaSlider.get() # Steady state production 
-	Bb = BaSlider.get()
+	Bb = BbSlider.get()
 	Sa = SaSlider.get() # Saturation 
 	Sb = SbSlider.get()
 	Ca = CaSlider.get() # Coupling 
 	Ga = GaSlider.get() # Initial concentration 
 	Gb = GbSlider.get()
-	InitialNoise = InitialNoiseSlider.get() # Initial noise 
+	Gc = GcSlider.get()
+	InitialNoise = InitialNoiseSlider.get() # Initial noise  
 
-Da, Db, Ra, Rb, Ba, Bb, Sa, Sb, Ca, Ga, Gb, InitialNoise = .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5
+Da, Db, Dc, Ra, Rb, Rc, Ba, Bb, Sa, Sb, Ca, Ga, Gb, Gc, InitialNoise = .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5
 #readSliders()
 
 # /////// FUNCTIONS AND METHODS OF THE SIMULATION ///////
@@ -128,11 +134,23 @@ def dbActivInhib(i, t):
 
 # ******* Activator substrate reaction (2.4) 
 def daActivSubs(i, t): 
-	A , B = a[i, t], b[i, t] 
-	return (Ca*B*((A*A / (1 + Sa*A*A)) + Ba) -Ra*A + Da*diffusion(a, i, t)) 
+	A, B = a[i, t], b[i, t] 
+	return (Ca*B*((A*A / (1 + Sa*A*A)) + Ba) - Ra*A + Da*diffusion(a, i, t)) 
 def dbActivSubs(i, t):
-	A , B = a[i, t], b[i, t]
-	return (Bb* - Ca*B*((A*A / (1 + Sa*A*A)) + Ba) - Rb + Db*diffusion(b, i, t))  
+	A, B = a[i, t], b[i, t]
+	return (Bb* - Ca*B*((A*A / (1 + Sa*A*A)) + Ba) - Rb*B + Db*diffusion(b, i, t))  
+
+# ******* Extended activator inhibitor mechanism 
+def daExActivInhib(i, t): 
+	A, B, C = a[i, t], b[i, t], c[i, t] 
+	return((Ca/C) * (A*A/B + Ba) - Ra*A +Da*diffusion(a, i, t)) 
+def dbExActivInhib(i, t):
+	A, B, C = a[i, t], b[i, t], c[i, t] 
+	return((Rb*A*A/C) - Rb*B + Db*diffusion(b, i, t)) 
+def dcExActivInhib(i, t):
+	A, B, C = a[i, t], b[i, t], c[i, t]
+	return(Rc*(A - C) + Dc*diffusion(c, i, t)) 
+
 
 # Dummy functions
 def dummyMain(): 
@@ -145,22 +163,35 @@ def dummyMain():
 def dummySnail(): 
 	initSubstance(a, Ga) 
 	initSubstance(b, Gb) 
-	readSliders() 
+	initSubstance(c, Gc) 
+	readSliders()
 	print_case = print_mode.get() 
 	for t in range(duration-1): 
 		for i in range(size):
 			# calculate a 
-			a[i, t+1] = a[i, t] + daActivInhib(i, t) 
+#			a[i, t+1] = a[i, t] + daActivSubs(i, t) 
+#			a[i, t+1] = a[i, t] + daActivInhib(i, t)
+#			a[i, t+1] = a[i, t] + daActivSubs(i, t)
+			a[i, t+1] = a[i, t] + daExActivInhib(i, t)
 			if a[i, t+1] >= 1: 
 				a[i, t+1] = 1
 			if a[i, t+1] < 0: 
 				a[i, t+1] = 0 
 			# calculate b 
-			b[i, t+1] = b[i, t] + dbActivInhib(i, t)
+#			b[i, t+1] = b[i, t] + dbActivSubs(i, t)
+#			b[i, t+1] = b[i, t] + dbActivInhib(i, t)
+#			b[i, t+1] = b[i, t] + dbActivSubs(i, t)
+			b[i, t+1] = b[i, t] + dbExActivInhib(i, t)
 			if b[i, t+1] >= 1:
 				b[i, t+1] = 1
 			if b[i, t+1] < 0:
 				b[i, t+1] = 0
+			# calculate c 
+			c[i, t+1] = c[i, t] + dcExActivInhib(i, t)
+			if c[i, t+1] >= 1:
+				c[i, t+1] = 1
+			if c[i, t+1] < 0:
+				c[i, t+1] = 0
 			# print line 
 			# maybe this can be done in a loop that runs after each line:
 			if print_case == "color":
@@ -193,6 +224,8 @@ DaSlider = Tkinter.Scale(diff_control, from_=0, to=1, resolution = 0.001, length
 DaSlider.pack(side="left")
 DbSlider = Tkinter.Scale(diff_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
 DbSlider.pack(side="left")
+DcSlider = Tkinter.Scale(diff_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+DcSlider.pack(side="left")
 # Decay 
 decay_control = Tkinter.Frame(snail_window)
 decay_control.pack()
@@ -202,6 +235,8 @@ RaSlider = Tkinter.Scale(decay_control, from_=0, to=1, resolution = 0.001, lengt
 RaSlider.pack(side="left")
 RbSlider = Tkinter.Scale(decay_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
 RbSlider.pack(side="left")
+RcSlider = Tkinter.Scale(decay_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+RcSlider.pack(side="left")
 # Steady state production
 steady_control = Tkinter.Frame(snail_window)
 steady_control.pack() 
@@ -211,6 +246,8 @@ BaSlider = Tkinter.Scale(steady_control, from_=0, to=1, resolution = 0.001, leng
 BaSlider.pack(side="left")
 BbSlider = Tkinter.Scale(steady_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
 BbSlider.pack(side="left")
+steady_spacer = Tkinter.Frame(steady_control, width=100)
+steady_spacer.pack(side="left")
 # Saturation 
 sat_control = Tkinter.Frame(snail_window)
 sat_control.pack()
@@ -220,6 +257,8 @@ SaSlider = Tkinter.Scale(sat_control, from_=0, to=1, resolution = 0.001, length=
 SaSlider.pack(side="left")
 SbSlider = Tkinter.Scale(sat_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
 SbSlider.pack(side="left")
+sat_spacer = Tkinter.Frame(sat_control, width=100)
+sat_spacer.pack(side="left")
 # Coupling
 coupling_control = Tkinter.Frame(snail_window)
 coupling_control.pack()
@@ -227,7 +266,7 @@ coupling_label = Tkinter.Label(coupling_control, text="Coupling:    ")
 coupling_label.pack(side="left")
 CaSlider = Tkinter.Scale(coupling_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
 CaSlider.pack(side="left")
-coupling_spacer = Tkinter.Frame(coupling_control, width=100) 
+coupling_spacer = Tkinter.Frame(coupling_control, width=200) 
 coupling_spacer.pack(side="left")
 # Initial concentration 
 concen_control = Tkinter.Frame(snail_window)
@@ -238,6 +277,8 @@ GaSlider = Tkinter.Scale(concen_control, from_=0, to=1, resolution = 0.001, leng
 GaSlider.pack(side="left")
 GbSlider = Tkinter.Scale(concen_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
 GbSlider.pack(side="left")
+GcSlider = Tkinter.Scale(concen_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+GcSlider.pack(side="left")
 # Initial noise
 noise_control = Tkinter.Frame(snail_window)
 noise_control.pack()
@@ -245,7 +286,7 @@ noise_label = Tkinter.Label(noise_control, text="Init. noise: ")
 noise_label.pack(side="left")
 InitialNoiseSlider = Tkinter.Scale(noise_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
 InitialNoiseSlider.pack(side="left")
-noise_spacer = Tkinter.Frame(noise_control, width=100) 
+noise_spacer = Tkinter.Frame(noise_control, width=200) 
 noise_spacer.pack(side="left")
 
 

@@ -4,7 +4,7 @@
 # 
 # This program is based on the book 
 # "The Algorithmic Beauty of Sea Shells" by Hans Meinhardt, 1995 Springer-Verlag Berlin Heidelberg New York 
-# and was created with the help of the program 
+# and has been created with the help of the program 
 # ising.py by Dan Schroeder, Weber State University, January 2013
 #
 # Autor: Korbinian Schreiber, University of Munich, June 2013
@@ -16,7 +16,7 @@ import Tkinter, numpy, random, math
 # /////// WINDOW SETTINGS AND ELEMENTARY GRAPHIC FUNCTIONS ///////
 
 size = 400 #number of cells 
-duration = 400 #number of time steps 
+duration = 200 #number of time steps 
 cell_width = 1 
 cell_duration = 1  
 canvas_width = size * cell_width #full width of the canvas in pixels 
@@ -102,7 +102,230 @@ def readSliders():
 	InitialNoise = InitialNoiseSlider.get() # Initial noise  
 
 Da, Db, Dc, Ra, Rb, Rc, Ba, Bb, Sa, Sb, Ca, Ga, Gb, Gc, InitialNoise = .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5
-#readSliders()
+
+# Set Parameters 
+def loadParameters(): 
+	enableAllSliders()
+	mode = sim_parameters.get() 
+	if mode == "3:caves":
+		Da = 0.044
+		Db = 0.838
+		Dc = 0.515
+		Ra = 0.618
+		Rb = 0.353
+		Rc = 0.529
+		Ba = 0.044
+		Bb = 0.000
+		Sa = 0.000
+		Sb = 0.000
+		Ca = 0.412
+		Ga = 0.250
+		Gb = 0.500
+		Gc = 0.500
+		InitialNoise = 0.200
+	elif mode == "3:chaos1": 
+		Da = 0.279
+		Db = 0.588
+		Dc = 0.485
+		Ra = 0.618
+		Rb = 0.353
+		Rc = 0.544
+		Ba = 0.044
+		Bb = 0.000
+		Sa = 0.000
+		Sb = 0.000
+		Ca = 0.412
+		Ga = 0.250
+		Gb = 0.500
+		Gc = 0.500
+		InitialNoise = 0.200
+	elif mode == "1:thin_lines": 
+		Da = 0.088
+		Db = 0.324
+		Dc = 0.000
+		Ra = 0.809
+		Rb = 0.000
+		Rc = 0.000
+		Ba = 0.088
+		Bb = 0.206
+		Sa = 0.000
+		Sb = 0.000
+		Ca = 0.368
+		Ga = 0.588
+		Gb = 0.500
+		Gc = 0.000
+		InitialNoise = 0.200
+	elif mode == "1:waves_stripes": 
+		Da = 0.103
+		Db = 0.353
+		Dc = 0.000
+		Ra = 0.691
+		Rb = 0.000
+		Rc = 0.000
+		Ba = 0.147
+		Bb = 0.201
+		Sa = 0.000
+		Sb = 0.000
+		Ca = 0.353
+		Ga = 0.441
+		Gb = 0.368
+		Gc = 0.000
+		InitialNoise = 0.324
+	elif mode == "1:dark_tri_waves"
+		Da = 0.059
+		Db = 0.279
+		Dc = 0.000
+		Ra = 0.529
+		Rb = 0.000
+		Rc = 0.000
+		Ba = 0.074
+		Bb = 0.110
+		Sa = 0.000
+		Sb = 0.000
+		Ca = 0.496
+		Ga = 0.647
+		Gb = 0.500
+		Gc = 0.000
+		InitialNoise = 0.426
+	
+	DaSlider.set(Da) # Diffusion 
+	DbSlider.set(Db)
+	DcSlider.set(Dc) # phase transition at 510
+        RaSlider.set(Ra) # Decay 
+        RbSlider.set(Rb)
+	RcSlider.set(Rc)
+        BaSlider.set(Ba) # Steady state production 
+        BbSlider.set(Bb)
+        SaSlider.set(Sa) # Saturation 
+        SbSlider.set(Sb)
+        CaSlider.set(Ca) # Coupling 
+        GaSlider.set(Ga) # Initial concentration 
+        GbSlider.set(Gb)
+	GcSlider.set(Gc)
+        InitialNoiseSlider.set(InitialNoise) # Initial noise 
+	activateSliders()
+
+# Enable all Sliders
+def enableAllSliders():
+	on = 'active'
+	DaSlider['state'] = on
+	DbSlider['state'] = on
+	DcSlider['state'] = on
+	RaSlider['state'] = on
+	RbSlider['state'] = on
+	RcSlider['state'] = on
+	BaSlider['state'] = on
+	BbSlider['state'] = on
+	SaSlider['state'] = on
+	SbSlider['state'] = on
+	CaSlider['state'] = on
+	GaSlider['state'] = on
+	GbSlider['state'] = on
+	GcSlider['state'] = on
+	InitialNoiseSlider['state'] = on
+
+# Activate Sliders 
+def activateSliders():
+	on = 'active'
+	off = 'disabled'
+	sliders = mechanism.get()
+	
+	print sliders
+	
+	if sliders == "1:act-in":
+		DaSlider['state'] = on
+		DaSlider['fg'] = 'black'
+		DbSlider['state'] = on
+		DbSlider['fg'] = 'black'
+		DcSlider['state'] = off
+		DcSlider['fg'] = 'grey'
+		RaSlider['state'] = on
+		RaSlider['fg'] = 'black'
+		RbSlider['state'] = off
+		RbSlider['fg'] = 'grey'
+		RcSlider['state'] = off
+		RcSlider['fg'] = 'grey'
+		BaSlider['state'] = on
+		BaSlider['fg'] = 'black'
+		BbSlider['state'] = on
+		BbSlider['fg'] = 'black'
+		SaSlider['state'] = off
+		SaSlider['fg'] = 'grey'
+		SbSlider['state'] = off
+		SbSlider['fg'] = 'grey'
+		CaSlider['state'] = on
+		CaSlider['fg'] = 'black'
+		GaSlider['state'] = on
+		GaSlider['fg'] = 'black'
+		GbSlider['state'] = on
+		GbSlider['fg'] = 'black'
+		GcSlider['state'] = off
+		GcSlider['fg'] = 'grey'
+		InitialNoiseSlider['state'] = on
+		InitialNoiseSlider['fg'] = 'black'
+	elif sliders == "2:act-sub":
+		DaSlider['state'] = on
+		DaSlider['fg'] = 'black'
+		DbSlider['state'] = on
+		DbSlider['fg'] = 'black'
+		DcSlider['state'] = off
+		DcSlider['fg'] = 'grey'
+		RaSlider['state'] = on
+		RaSlider['fg'] = 'black'
+		RbSlider['state'] = on
+		RbSlider['fg'] = 'black'
+		RcSlider['state'] = off
+		RcSlider['fg'] = 'grey'
+		BaSlider['state'] = on
+		BaSlider['fg'] = 'black'
+		BbSlider['state'] = on
+		BbSlider['fg'] = 'black'
+		SaSlider['state'] = on
+		SaSlider['fg'] = 'black'
+		SbSlider['state'] = off
+		SbSlider['fg'] = 'grey'
+		CaSlider['state'] = on
+		CaSlider['fg'] = 'black'
+		GaSlider['state'] = on
+		GaSlider['fg'] = 'black'
+		GbSlider['state'] = on
+		GbSlider['fg'] = 'black'
+		GcSlider['state'] = off
+		GcSlider['fg'] = 'grey'
+		InitialNoiseSlider['state'] = on
+		InitialNoiseSlider['fg'] = 'black'
+	elif sliders == "3:ext act-in":
+		DaSlider['state'] = on
+		DaSlider['fg'] = 'black'
+		DbSlider['state'] = on
+		DbSlider['fg'] = 'black'
+		DcSlider['state'] = on
+		DcSlider['fg'] = 'black'
+		RaSlider['state'] = on
+		RaSlider['fg'] = 'black'
+		RbSlider['state'] = on
+		RbSlider['fg'] = 'black'
+		RcSlider['state'] = on
+		RcSlider['fg'] = 'black'
+		BaSlider['state'] = on
+		BaSlider['fg'] = 'black'
+		BbSlider['state'] = off
+		BbSlider['fg'] = 'grey'
+		SaSlider['state'] = off
+		SaSlider['fg'] = 'grey'
+		SbSlider['state'] = off
+		SbSlider['fg'] = 'grey'
+		CaSlider['state'] = on
+		CaSlider['fg'] = 'black'
+		GaSlider['state'] = on
+		GaSlider['fg'] = 'black'
+		GbSlider['state'] = on
+		GbSlider['fg'] = 'black'
+		GcSlider['state'] = on
+		GcSlider['fg'] = 'black'
+		InitialNoiseSlider['state'] = on
+		InitialNoiseSlider['fg'] = 'black'
+		
 
 # /////// FUNCTIONS AND METHODS OF THE SIMULATION ///////
 
@@ -127,10 +350,12 @@ def diffusion(substance, i, t):
 
 # ******* Activator inhibitor mechanism (2.1)  
 def daActivInhib(i, t):	
-	return (Ca * ((a[i, t] * a[i, t] / b[i, t]) + Ba) - Ra*a[i, t] + Da*diffusion(a, i, t)) 
+	A, B = a[i, t], b[i, t]
+	return (Ca * ((A*A / B) + Ba) - Ra*A + Da*diffusion(a, i, t)) 
 
 def dbActivInhib(i, t): 
-	return (Ca * a[i, t] * a[i, t]  - Ra*b[i, t] + Bb + Db*diffusion(b, i, t))
+	A, B = a[i, t], b[i, t]
+	return (Ca*A*A  - Ra*B + Bb + Db*diffusion(b, i, t))
 
 # ******* Activator substrate reaction (2.4) 
 def daActivSubs(i, t): 
@@ -202,19 +427,82 @@ def dummySnail():
 				setCell(i, t+1, a[i, t+1])
 		snail_window.update() 	
 
+def executeSim():
+	activateSliders()
+	readSliders() 
+	initSubstance(a, Ga)
+	initSubstance(b, Gb)
+	initSubstance(c, Gc)
+	mech = mechanism.get()
+	print_case = print_mode.get() 
+	if mech == "1:act-in": 
+		for t in range(duration-1): 
+			for i in range(size):
+				a[i, t+1] = a[i, t] + daActivInhib(i, t)
+				if a[i, t+1] >= 1: 
+					a[i, t+1] = 1
+				if a[i, t+1] < 0: 
+					a[i, t+1] = 0
+				b[i, t+1] = b[i, t] + dbActivInhib(i, t)
+				if b[i, t+1] >= 1:
+					b[i, t+1] = 1
+				if b[i, t+1] < 0:
+					b[i, t+1] = 0
+				if print_case == "color":
+					setCellColors(i, t+1, a[i, t+1], b[i, t+1]) 
+				elif print_case == "diff": 
+					setCellDiff(i, t+1, a[i, t+1], b[i, t+1]) 
+				elif print_case == "b/w": 
+					setCell(i, t+1, a[i, t+1])
+			snail_window.update()
+	elif mech == "2:act-sub": 
+		for t in range(duration-1): 
+			for i in range(size):
+				a[i, t+1] = a[i, t] + daActivSubs(i, t)
+				if a[i, t+1] >= 1: 
+					a[i, t+1] = 1
+				if a[i, t+1] < 0: 
+					a[i, t+1] = 0
+				b[i, t+1] = b[i, t] + dbActivSubs(i, t)
+				if b[i, t+1] >= 1:
+					b[i, t+1] = 1
+				if b[i, t+1] < 0:
+					b[i, t+1] = 0
+				if print_case == "color":
+					setCellColors(i, t+1, a[i, t+1], b[i, t+1]) 
+				elif print_case == "diff": 
+					setCellDiff(i, t+1, a[i, t+1], b[i, t+1]) 
+				elif print_case == "b/w": 
+					setCell(i, t+1, a[i, t+1])
+			snail_window.update()
+	elif mech == "3:ext act-in": 
+		for t in range(duration-1): 
+			for i in range(size):
+				a[i, t+1] = a[i, t] + daExActivInhib(i, t)
+				if a[i, t+1] >= 1: 
+					a[i, t+1] = 1
+				if a[i, t+1] < 0: 
+					a[i, t+1] = 0
+				b[i, t+1] = b[i, t] + dbExActivInhib(i, t)
+				if b[i, t+1] >= 1:
+					b[i, t+1] = 1
+				if b[i, t+1] < 0:
+					b[i, t+1] = 0
+				c[i, t+1] = c[i, t] + dcExActivInhib(i, t)
+				if c[i, t+1] >= 1:
+					c[i, t+1] = 1
+				if c[i, t+1] < 0:
+					c[i, t+1] = 0
+				if print_case == "color":
+					setCellColors(i, t+1, a[i, t+1], b[i, t+1]) 
+				elif print_case == "diff": 
+					setCellDiff(i, t+1, a[i, t+1], b[i, t+1]) 
+				elif print_case == "b/w": 
+					setCell(i, t+1, a[i, t+1])
+			snail_window.update()
 
 # /////// USER INTERFACE ///////
 
-# Start button
-start_control = Tkinter.Frame(snail_window) 
-start_control.pack(side="left") 
-StartButton = Tkinter.Button(start_control, text = "SIM", width = 3, command = dummySnail)
-StartButton.pack(side="top") 
-# Print mode menu 
-print_mode = Tkinter.StringVar(start_control) 
-print_mode.set("b/w") 
-print_menu = Tkinter.OptionMenu(start_control, print_mode, "b/w", "diff", "color") 
-print_menu.pack() 
 # Diffusion 
 diff_control = Tkinter.Frame(snail_window)
 diff_control.pack() 
@@ -288,13 +576,38 @@ InitialNoiseSlider = Tkinter.Scale(noise_control, from_=0, to=1, resolution = 0.
 InitialNoiseSlider.pack(side="left")
 noise_spacer = Tkinter.Frame(noise_control, width=200) 
 noise_spacer.pack(side="left")
+# Start button
+start_control = Tkinter.Frame(snail_window) 
+start_control.pack(side="left") 
+StartButton = Tkinter.Button(start_control, text = "SIM", width = 3, command = executeSim) 
+StartButton.pack(side="left") 
+# Print mode menu 
+print_mode = Tkinter.StringVar(start_control) 
+print_mode.set("b/w") 
+print_menu = Tkinter.OptionMenu(start_control, print_mode, "b/w", "diff", "color") 
+print_menu.pack(side="left")
+# Simulation parameter menu
+sim_parameters = Tkinter.StringVar(start_control) 
+sim_parameters.set("1:thin_lines") 
+SimMenu = Tkinter.OptionMenu(start_control, sim_parameters, "1:thin_lines", "1:waves_stripes", "1:dark_tri_waves", "3:caves", "3:chaos1") 
+SimMenu.pack(side="left")
+# Load simulation button
+load_sim = Tkinter.Frame(snail_window) 
+load_sim.pack(side="left") 
+LoadSimButton = Tkinter.Button(start_control, text = "LOAD", width = 3, command = loadParameters) 
+LoadSimButton.pack(side="left") 
+# Mechanism menu
+mechanism = Tkinter.StringVar(start_control) 
+mechanism.set("1:act-in") 
+MechMenu = Tkinter.OptionMenu(start_control, mechanism, "1:act-in", "2:act-sub", "3:ext act-in") 
+MechMenu.pack(side="left")
 
 
 # /////// MAIN FUNCTION AND LOOP ///////
 
 #dummyMain() 
-initParameters() 
-dummySnail() 
+loadParameters() 
+executeSim() 
 #snail_window.after(1, dummySnail())  
 snail_window.mainloop()
 

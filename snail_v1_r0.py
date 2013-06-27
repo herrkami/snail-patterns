@@ -15,9 +15,9 @@ import Tkinter, numpy, random, math
 
 # /////// WINDOW SETTINGS AND ELEMENTARY GRAPHIC FUNCTIONS ///////
 
-size = 400 #number of cells 
+size = 400#number of cells 
 duration = 200 #number of time steps 
-cell_width = 1 
+cell_width = 1
 cell_duration = 1  
 canvas_width = size * cell_width #full width of the canvas in pixels 
 canvas_height = duration * cell_duration 
@@ -187,7 +187,39 @@ def loadParameters():
 		Gb = 0.500
 		Gc = 0.000
 		InitialNoise = 0.426
-	
+	elif mode == "1:triangles1":
+		Da = 0.056
+		Db = 0.500
+		Dc = 0.000
+		Ra = 0.706
+		Rb = 0.000
+		Rc = 0.000
+		Ba = 0.044
+		Bb = 0.500
+		Sa = 0.000
+		Sb = 0.000
+		Ca = 0.706
+		Ga = 0.191
+		Gb = 0.500
+		Gc = 0.000
+		InitialNoise = 0.200
+	elif mode == "1:stripes1":
+		Da = 0.035
+		Db = 0.353
+		Dc = 0.000
+		Ra = 0.368
+		Rb = 0.000
+		Rc = 0.000
+		Ba = 0.022
+		Bb = 0.633
+		Sa = 0.000
+		Sb = 0.000
+		Ca = 0.430
+		Ga = 0.640
+		Gb = 0.500
+		Gc = 0.000
+		InitialNoise = 0.074
+
 	DaSlider.set(Da) # Diffusion 
 	DbSlider.set(Db)
 	DcSlider.set(Dc) # phase transition at 510
@@ -589,7 +621,7 @@ print_menu.pack(side="left")
 # Simulation parameter menu
 sim_parameters = Tkinter.StringVar(start_control) 
 sim_parameters.set("1:thin_lines") 
-SimMenu = Tkinter.OptionMenu(start_control, sim_parameters, "1:thin_lines", "1:waves_stripes", "1:dark_tri_waves", "3:caves", "3:chaos1") 
+SimMenu = Tkinter.OptionMenu(start_control, sim_parameters, "1:thin_lines", "1:stripes1", "1:waves_stripes", "1:dark_tri_waves", "1:triangles1", "3:caves", "3:chaos1") 
 SimMenu.pack(side="left")
 # Load simulation button
 load_sim = Tkinter.Frame(snail_window) 

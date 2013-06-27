@@ -43,10 +43,11 @@ def setCell(i,t,value):
 	snail_image.put("#%02x%02x%02x" %(r,g,b), to=(i*cell_width, t*cell_duration, (i+1)*cell_width, (t+1)*cell_duration))
 
 # Set two cell colors in [0,1] 
-def setCellColors(i, t, red, green): 
-	red = 255 - int(round(red * 255)) 
-	green = 255 - int(round(green * 255)) 
-	r,g,b = red,green,green
+def setCellColors(i, t, a, b): 
+	print a
+	a = 255 - int(round(a * 255)) 
+	b = 255 - int(round(b * 255)) 
+	r,g,b = b,a,a
 	snail_image.put("#%02x%02x%02x" %(r,g,b), to=(i*cell_width, t*cell_duration, (i+1)*cell_width, (t+1)*cell_duration))
 
 # Set cell color as difference between two values [0,1] 
@@ -144,7 +145,7 @@ def loadParameters():
 		Db = 0.324
 		Dc = 0.000
 		Ra = 0.809
-		Rb = 0.000
+		Rb = 0.809
 		Rc = 0.000
 		Ba = 0.088
 		Bb = 0.206
@@ -160,7 +161,7 @@ def loadParameters():
 		Db = 0.353
 		Dc = 0.000
 		Ra = 0.691
-		Rb = 0.000
+		Rb = 0.691
 		Rc = 0.000
 		Ba = 0.147
 		Bb = 0.201
@@ -176,7 +177,7 @@ def loadParameters():
 		Db = 0.279
 		Dc = 0.000
 		Ra = 0.529
-		Rb = 0.000
+		Rb = 0.529
 		Rc = 0.000
 		Ba = 0.074
 		Bb = 0.110
@@ -192,7 +193,7 @@ def loadParameters():
 		Db = 0.500
 		Dc = 0.000
 		Ra = 0.706
-		Rb = 0.000
+		Rb = 0.706
 		Rc = 0.000
 		Ba = 0.044
 		Bb = 0.500
@@ -208,7 +209,7 @@ def loadParameters():
 		Db = 0.353
 		Dc = 0.000
 		Ra = 0.368
-		Rb = 0.000
+		Rb = 0.368
 		Rc = 0.000
 		Ba = 0.022
 		Bb = 0.633
@@ -219,7 +220,87 @@ def loadParameters():
 		Gb = 0.500
 		Gc = 0.000
 		InitialNoise = 0.074
-
+	elif mode == "1:bloody_tears":
+		Da = 0.094
+		Db = 0.809
+		Dc = 0.000
+		Ra = 0.676
+		Rb = 0.676
+		Rc = 0.000
+		Ba = 0.118
+		Bb = 0.647
+		Sa = 0.000
+		Sb = 0.000
+		Ca = 0.657
+		Ga = 0.646
+		Gb = 0.500
+		Gc = 0.000
+		InitialNoise = 0.044
+	elif mode == "1:hearts":
+		Da = 0.397
+		Db = 0.824
+		Dc = 0.000
+		Ra = 0.676
+		Rb = 0.676
+		Rc = 0.000
+		Ba = 0.118
+		Bb = 0.615
+		Sa = 0.000
+		Sb = 0.000
+		Ca = 0.657
+		Ga = 0.646
+		Gb = 0.500
+		Gc = 0.000
+		InitialNoise = 0.044
+	elif mode == "2:diagonals":
+		Da = 0.010
+		Db = 0.412
+		Dc = 0.000
+		Ra = 0.335
+		Rb = 0.547
+		Rc = 0.000
+		Ba = 0.074
+		Bb = 0.618
+		Sa = 0.574
+		Sb = 0.000
+		Ca = 0.897
+		Ga = 0.647
+		Gb = 0.500
+		Gc = 0.000
+		InitialNoise = 0.426
+	elif mode == "2:nice_waves":
+		Da = 0.809
+		Db = 0.309
+		Dc = 0.000
+		Ra = 0.250
+		Rb = 0.265
+		Rc = 0.000
+		Ba = 0.441
+		Bb = 0.588
+		Sa = 0.647
+		Sb = 0.000
+		Ca = 0.897
+		Ga = 0.284
+		Gb = 0.500
+		Gc = 0.000
+		InitialNoise = 0.132
+	elif mode == "2:beauty_triangles":
+		Da = 0.809
+		Db = 0.400
+		Dc = 0.000
+		Ra = 0.250
+		Rb = 0.265
+		Rc = 0.000
+		Ba = 0.382
+		Bb = 0.814
+		Sa = 0.971
+		Sb = 0.000
+		Ca = 0.897
+		Ga = 0.294
+		Gb = 0.500
+		Gc = 0.000
+		InitialNoise = 0.132
+		
 	DaSlider.set(Da) # Diffusion 
 	DbSlider.set(Db)
 	DcSlider.set(Dc) # phase transition at 510
@@ -273,8 +354,8 @@ def activateSliders():
 		DcSlider['fg'] = 'grey'
 		RaSlider['state'] = on
 		RaSlider['fg'] = 'black'
-		RbSlider['state'] = off
-		RbSlider['fg'] = 'grey'
+		RbSlider['state'] = on
+		RbSlider['fg'] = 'black'
 		RcSlider['state'] = off
 		RcSlider['fg'] = 'grey'
 		BaSlider['state'] = on
@@ -387,7 +468,7 @@ def daActivInhib(i, t):
 
 def dbActivInhib(i, t): 
 	A, B = a[i, t], b[i, t]
-	return (Ca*A*A  - Ra*B + Bb + Db*diffusion(b, i, t))
+	return (Ca*A*A  - Rb*B + Bb + Db*diffusion(b, i, t))
 
 # ******* Activator substrate reaction (2.4) 
 def daActivSubs(i, t): 
@@ -395,7 +476,7 @@ def daActivSubs(i, t):
 	return (Ca*B*((A*A / (1 + Sa*A*A)) + Ba) - Ra*A + Da*diffusion(a, i, t)) 
 def dbActivSubs(i, t):
 	A, B = a[i, t], b[i, t]
-	return (Bb* - Ca*B*((A*A / (1 + Sa*A*A)) + Ba) - Rb*B + Db*diffusion(b, i, t))  
+	return (Bb - Ca*B*((A*A / (1 + Sa*A*A)) + Ba) - Rb*B + Db*diffusion(b, i, t))  
 
 # ******* Extended activator inhibitor mechanism 
 def daExActivInhib(i, t): 
@@ -615,13 +696,13 @@ StartButton = Tkinter.Button(start_control, text = "SIM", width = 3, command = e
 StartButton.pack(side="left") 
 # Print mode menu 
 print_mode = Tkinter.StringVar(start_control) 
-print_mode.set("b/w") 
+print_mode.set("color") 
 print_menu = Tkinter.OptionMenu(start_control, print_mode, "b/w", "diff", "color") 
 print_menu.pack(side="left")
 # Simulation parameter menu
 sim_parameters = Tkinter.StringVar(start_control) 
-sim_parameters.set("1:thin_lines") 
-SimMenu = Tkinter.OptionMenu(start_control, sim_parameters, "1:thin_lines", "1:stripes1", "1:waves_stripes", "1:dark_tri_waves", "1:triangles1", "3:caves", "3:chaos1") 
+sim_parameters.set("3:caves") 
+SimMenu = Tkinter.OptionMenu(start_control, sim_parameters, "1:thin_lines", "1:stripes1", "1:waves_stripes", "1:dark_tri_waves", "1:triangles1", "1:bloody_tears", "1:hearts", "2:diagonals", "2:nice_waves", "2:beauty_triangles", "3:caves", "3:chaos1") 
 SimMenu.pack(side="left")
 # Load simulation button
 load_sim = Tkinter.Frame(snail_window) 
@@ -630,7 +711,7 @@ LoadSimButton = Tkinter.Button(start_control, text = "LOAD", width = 3, command 
 LoadSimButton.pack(side="left") 
 # Mechanism menu
 mechanism = Tkinter.StringVar(start_control) 
-mechanism.set("1:act-in") 
+mechanism.set("3:ext act-in") 
 MechMenu = Tkinter.OptionMenu(start_control, mechanism, "1:act-in", "2:act-sub", "3:ext act-in") 
 MechMenu.pack(side="left")
 

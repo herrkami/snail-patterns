@@ -171,7 +171,7 @@ def loadParameters():
 		Gb = 0.368
 		Gc = 0.000
 		InitialNoise = 0.324
-	elif mode == "1:dark_tri_waves"
+	elif mode == "1:dark_tri_waves":
 		Da = 0.059
 		Db = 0.279
 		Dc = 0.000

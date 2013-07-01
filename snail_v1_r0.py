@@ -300,7 +300,39 @@ def loadParameters():
 		Gb = 0.500
 		Gc = 0.000
 		InitialNoise = 0.132
-		
+	elif mode == "2:ghosts":
+		Da = 0.824
+		Db = 0.162
+		Dc = 0.000
+		Ra = 0.529
+		Rb = 0.897
+		Rc = 0.000
+		Ba = 0.632
+		Bb = 0.647
+		Sa = 0.147
+		Sb = 0.000
+		Ca = 0.824
+		Ga = 0.294
+		Gb = 0.154
+		Gc = 0.000
+		InitialNoise = 0.206
+	elif mode == "2:dif_angle_lines":
+		Da = 0.809
+		Db = 0.368
+		Dc = 0.000
+		Ra = 0.250
+		Rb = 0.338
+		Rc = 0.000
+		Ba = 0.382
+		Bb = 0.382
+		Sa = 0.971
+		Sb = 0.000
+		Ca = 0.897
+		Ga = 1.000
+		Gb = 0.500
+		Gc = 0.000
+		InitialNoise = 0.235
+	
 	DaSlider.set(Da) # Diffusion 
 	DbSlider.set(Db)
 	DcSlider.set(Dc) # phase transition at 510
@@ -422,8 +454,8 @@ def activateSliders():
 		RcSlider['fg'] = 'black'
 		BaSlider['state'] = on
 		BaSlider['fg'] = 'black'
-		BbSlider['state'] = off
-		BbSlider['fg'] = 'grey'
+		BbSlider['state'] = on
+		BbSlider['fg'] = 'black'
 		SaSlider['state'] = off
 		SaSlider['fg'] = 'grey'
 		SbSlider['state'] = off
@@ -478,13 +510,13 @@ def dbActivSubs(i, t):
 	A, B = a[i, t], b[i, t]
 	return (Bb - Ca*B*((A*A / (1 + Sa*A*A)) + Ba) - Rb*B + Db*diffusion(b, i, t))  
 
-# ******* Extended activator inhibitor mechanism 
+# ******* Extended activator inhibitor mechanism (5.3)
 def daExActivInhib(i, t): 
 	A, B, C = a[i, t], b[i, t], c[i, t] 
 	return((Ca/C) * (A*A/B + Ba) - Ra*A +Da*diffusion(a, i, t)) 
 def dbExActivInhib(i, t):
 	A, B, C = a[i, t], b[i, t], c[i, t] 
-	return((Rb*A*A/C) - Rb*B + Db*diffusion(b, i, t)) 
+	return((Rb*A*A/C) - Rb*B + Bb + Db*diffusion(b, i, t)) 
 def dcExActivInhib(i, t):
 	A, B, C = a[i, t], b[i, t], c[i, t]
 	return(Rc*(A - C) + Dc*diffusion(c, i, t)) 
@@ -696,13 +728,13 @@ StartButton = Tkinter.Button(start_control, text = "SIM", width = 3, command = e
 StartButton.pack(side="left") 
 # Print mode menu 
 print_mode = Tkinter.StringVar(start_control) 
-print_mode.set("color") 
+print_mode.set("b/w") 
 print_menu = Tkinter.OptionMenu(start_control, print_mode, "b/w", "diff", "color") 
 print_menu.pack(side="left")
 # Simulation parameter menu
 sim_parameters = Tkinter.StringVar(start_control) 
-sim_parameters.set("3:caves") 
-SimMenu = Tkinter.OptionMenu(start_control, sim_parameters, "1:thin_lines", "1:stripes1", "1:waves_stripes", "1:dark_tri_waves", "1:triangles1", "1:bloody_tears", "1:hearts", "2:diagonals", "2:nice_waves", "2:beauty_triangles", "3:caves", "3:chaos1") 
+sim_parameters.set("2:beauty_triangles") 
+SimMenu = Tkinter.OptionMenu(start_control, sim_parameters, "1:thin_lines", "1:stripes1", "1:waves_stripes", "1:dark_tri_waves", "1:triangles1", "1:bloody_tears", "1:hearts", "2:diagonals", "2:nice_waves", "2:ghosts", "2:beauty_triangles", "2:dif_angle_lines", "3:caves", "3:chaos1") 
 SimMenu.pack(side="left")
 # Load simulation button
 load_sim = Tkinter.Frame(snail_window) 
@@ -711,7 +743,7 @@ LoadSimButton = Tkinter.Button(start_control, text = "LOAD", width = 3, command 
 LoadSimButton.pack(side="left") 
 # Mechanism menu
 mechanism = Tkinter.StringVar(start_control) 
-mechanism.set("3:ext act-in") 
+mechanism.set("2:act-sub") 
 MechMenu = Tkinter.OptionMenu(start_control, mechanism, "1:act-in", "2:act-sub", "3:ext act-in") 
 MechMenu.pack(side="left")
 

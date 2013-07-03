@@ -220,6 +220,22 @@ def loadParameters():
 		Gb = 0.500
 		Gc = 0.000
 		InitialNoise = 0.074
+	elif mode == "1:stripes2":
+		Da = 0.059
+		Db = 0.412
+		Dc = 0.000
+		Ra = 0.500
+		Rb = 0.500
+		Rc = 0.000
+		Ba = 0.132
+		Bb = 0.265
+		Sa = 0.000
+		Sb = 0.000
+		Ca = 0.515
+		Ga = 0.191
+		Gb = 0.500
+		Gc = 0.000
+		InitialNoise = 0.044
 	elif mode == "1:bloody_tears":
 		Da = 0.094
 		Db = 0.809
@@ -284,6 +300,38 @@ def loadParameters():
 		Gb = 0.500
 		Gc = 0.000
 		InitialNoise = 0.132
+	elif mode == "2:waves1":
+		Da = 0.397
+		Db = 0.397
+		Dc = 0.000
+		Ra = 0.426
+		Rb = 0.000
+		Rc = 0.000
+		Ba = 0.088
+		Bb = 0.265
+		Sa = 0.000
+		Sb = 0.000
+		Ca = 0.824
+		Ga = 0.176
+		Gb = 0.500
+		Gc = 0.191
+		InitialNoise = 0.132
+	elif mode == "2:crossing_waves":
+		Da = 0.662
+		Db = 0.515
+		Dc = 0.000
+		Ra = 0.191
+		Rb = 0.265
+		Rc = 0.000
+		Ba = 0.441
+		Bb = 0.706
+		Sa = 1.000
+		Sb = 0.000
+		Ca = 0.897
+		Ga = 0.000
+		Gb = 0.500
+		Gc = 0.000
+		InitialNoise = 0.001
 	elif mode == "2:beauty_triangles":
 		Da = 0.809
 		Db = 0.400
@@ -332,7 +380,23 @@ def loadParameters():
 		Gb = 0.500
 		Gc = 0.000
 		InitialNoise = 0.235
-	
+	elif mode == "3:stripes_n_waves":
+		Da = 0.004
+		Db = 0.265
+		Dc = 0.485
+		Ra = 0.926
+		Rb = 0.044
+		Rc = 0.206
+		Ba = 0.022
+		Bb = 0.794
+		Sa = 0.000
+		Sb = 0.000
+		Ca = 0.662
+		Ga = 0.640
+		Gb = 0.500
+		Gc = 0.000
+		InitialNoise = 0.074
+		
 	DaSlider.set(Da) # Diffusion 
 	DbSlider.set(Db)
 	DcSlider.set(Dc) # phase transition at 510
@@ -734,7 +798,7 @@ print_menu.pack(side="left")
 # Simulation parameter menu
 sim_parameters = Tkinter.StringVar(start_control) 
 sim_parameters.set("2:beauty_triangles") 
-SimMenu = Tkinter.OptionMenu(start_control, sim_parameters, "1:thin_lines", "1:stripes1", "1:waves_stripes", "1:dark_tri_waves", "1:triangles1", "1:bloody_tears", "1:hearts", "2:diagonals", "2:nice_waves", "2:ghosts", "2:beauty_triangles", "2:dif_angle_lines", "3:caves", "3:chaos1") 
+SimMenu = Tkinter.OptionMenu(start_control, sim_parameters, "1:thin_lines", "1:stripes1", "1:stripes2", "1:waves_stripes", "1:dark_tri_waves", "1:triangles1", "1:bloody_tears", "1:hearts", "2:diagonals", "2:waves1", "2:nice_waves", "2:crossing_waves", "2:ghosts", "2:beauty_triangles", "2:dif_angle_lines", "3:caves", "3:chaos1", "3:stripes_n_waves") 
 SimMenu.pack(side="left")
 # Load simulation button
 load_sim = Tkinter.Frame(snail_window) 

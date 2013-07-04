@@ -275,7 +275,7 @@ def loadParameters():
 		Ab = 0.000
 		Ac = 0.000
 		InitialNoise = 0.074
-	elif mode == "1:stripes2":
+	elif mode == "1:cepaea_nemoralis":
 		Da = 0.118
 		Db = 0.559
 		Dc = 0.000
@@ -407,7 +407,7 @@ def loadParameters():
 		Ab = 0.000
 		Ac = 0.000
 		InitialNoise = 0.426
-	elif mode == "2:nice_waves":
+	elif mode == "2:amoria_ellioti":
 		Da = 0.809
 		Db = 0.309
 		Dc = 0.000
@@ -473,7 +473,7 @@ def loadParameters():
 		Ab = 0.000
 		Ac = 0.000
 		InitialNoise = 0.001
-	elif mode == "2:beauty_triangles":
+	elif mode == "2:oliva_porphyria":
 		Da = 0.809
 		Db = 0.400
 		Dc = 0.000
@@ -1043,8 +1043,8 @@ print_menu = Tkinter.OptionMenu(start_control, print_mode, "b/w", "diff", "color
 print_menu.pack(side="left")
 # Simulation parameter menu
 sim_parameters = Tkinter.StringVar(start_control) 
-sim_parameters.set("2:beauty_triangles") 
-SimMenu = Tkinter.OptionMenu(start_control, sim_parameters, "1:thin_lines", "1:stripes1", "1:stripes2", "1:waves1", "1:conus_ebraeus", "1:waves_stripes", "1:dark_tri_waves", "1:triangles1", "1:bloody_tears", "1:hearts", "2:diagonals", "2:waves1", "2:nice_waves", "2:conus_abbas", "2:ghosts", "2:beauty_triangles", "2:dif_angle_lines", "3:caves", "3:chaos1", "3:stripes_n_waves") 
+sim_parameters.set("2:oliva_porphyria") 
+SimMenu = Tkinter.OptionMenu(start_control, sim_parameters, "1:thin_lines", "1:stripes1", "1:cepaea_nemoralis", "1:waves1", "1:conus_ebraeus", "1:waves_stripes", "1:dark_tri_waves", "1:triangles1", "1:bloody_tears", "1:hearts", "2:diagonals", "2:waves1", "2:amoria_ellioti", "2:conus_abbas", "2:ghosts", "2:oliva_porphyria", "2:dif_angle_lines", "3:caves", "3:chaos1", "3:stripes_n_waves") 
 SimMenu.pack(side="left")
 # Load simulation button
 load_sim = Tkinter.Frame(snail_window) 

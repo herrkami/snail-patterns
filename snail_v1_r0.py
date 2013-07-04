@@ -15,8 +15,8 @@ import Tkinter, numpy, random, math
 
 # /////// WINDOW SETTINGS AND ELEMENTARY GRAPHIC FUNCTIONS ///////
 
-size = 400#number of cells 
-duration = 200 #number of time steps 
+size = 600#number of cells 
+duration = 400 #number of time steps 
 cell_width = 1
 cell_duration = 1  
 canvas_width = size * cell_width #full width of the canvas in pixels 
@@ -81,11 +81,17 @@ def initParameters():
         GaSlider.set(0.250) # Initial concentration 
         GbSlider.set(0.5)
 	GcSlider.set(0.5)
+	PaSlider.set(0) # Initial concentration 
+        PbSlider.set(0)
+	PcSlider.set(0)
+	AaSlider.set(0.000) # Initial concentration 
+        AbSlider.set(0.000)
+	AcSlider.set(0.000)
         InitialNoiseSlider.set(0.2) # Initial noise 
 
 # Read sliders 
 def readSliders(): 
-	global Da, Db, Dc, Ra, Rb, Rc, Ba, Bb, Sa, Sb, Ca, Ga, Gb, Gc, InitialNoise 
+	global Da, Db, Dc, Ra, Rb, Rc, Ba, Bb, Sa, Sb, Ca, Ga, Gb, Gc, Pa, Pb, Pc, Aa, Ab, Ac, InitialNoise 
 	Da = DaSlider.get() # Diffusion 
 	Db = DbSlider.get()
 	Dc = DcSlider.get()
@@ -100,9 +106,16 @@ def readSliders():
 	Ga = GaSlider.get() # Initial concentration 
 	Gb = GbSlider.get()
 	Gc = GcSlider.get()
+	Pa = PaSlider.get() # Initial period 
+	Pb = PbSlider.get()
+	Pc = PcSlider.get()
+	Aa = AaSlider.get() # Initial period 
+	Ab = AbSlider.get()
+	Ac = AcSlider.get()
 	InitialNoise = InitialNoiseSlider.get() # Initial noise  
 
-Da, Db, Dc, Ra, Rb, Rc, Ba, Bb, Sa, Sb, Ca, Ga, Gb, Gc, InitialNoise = .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5
+Da, Db, Dc, Ra, Rb, Rc, Ba, Bb, Sa, Sb, Ca, Ga, Gb, Gc, Aa, Ab, Ac, InitialNoise = .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5
+Pa, Pb, Pc = 1, 1, 1
 
 # Set Parameters 
 def loadParameters(): 
@@ -123,6 +136,12 @@ def loadParameters():
 		Ga = 0.250
 		Gb = 0.500
 		Gc = 0.500
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.200
 	elif mode == "3:chaos1": 
 		Da = 0.279
@@ -139,6 +158,12 @@ def loadParameters():
 		Ga = 0.250
 		Gb = 0.500
 		Gc = 0.500
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.200
 	elif mode == "1:thin_lines": 
 		Da = 0.088
@@ -155,6 +180,12 @@ def loadParameters():
 		Ga = 0.588
 		Gb = 0.500
 		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.200
 	elif mode == "1:waves_stripes": 
 		Da = 0.103
@@ -171,6 +202,12 @@ def loadParameters():
 		Ga = 0.441
 		Gb = 0.368
 		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.324
 	elif mode == "1:dark_tri_waves":
 		Da = 0.059
@@ -187,6 +224,12 @@ def loadParameters():
 		Ga = 0.647
 		Gb = 0.500
 		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.426
 	elif mode == "1:triangles1":
 		Da = 0.056
@@ -203,6 +246,12 @@ def loadParameters():
 		Ga = 0.191
 		Gb = 0.500
 		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.200
 	elif mode == "1:stripes1":
 		Da = 0.035
@@ -219,23 +268,57 @@ def loadParameters():
 		Ga = 0.640
 		Gb = 0.500
 		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.074
 	elif mode == "1:stripes2":
-		Da = 0.059
-		Db = 0.412
+		Da = 0.118
+		Db = 0.559
 		Dc = 0.000
-		Ra = 0.500
-		Rb = 0.500
+		Ra = 0.471
+		Rb = 0.471
 		Rc = 0.000
-		Ba = 0.132
-		Bb = 0.265
+		Ba = 0.147
+		Bb = 0.441
 		Sa = 0.000
 		Sb = 0.000
-		Ca = 0.515
-		Ga = 0.191
+		Ca = 0.500
+		Ga = 0.500
 		Gb = 0.500
 		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.044
+	elif mode == "1:waves1":
+		Da = 0.029
+		Db = 0.559
+		Dc = 0.000
+		Ra = 0.412
+		Rb = 0.471
+		Rc = 0.000
+		Ba = 0.426
+		Bb = 0.441
+		Sa = 0.000
+		Sb = 0.000
+		Ca = 0.206
+		Ga = 0.500
+		Gb = 0.500
+		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
+		InitialNoise = 0.001
 	elif mode == "1:bloody_tears":
 		Da = 0.094
 		Db = 0.809
@@ -251,6 +334,12 @@ def loadParameters():
 		Ga = 0.646
 		Gb = 0.500
 		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.044
 	elif mode == "1:hearts":
 		Da = 0.397
@@ -267,6 +356,12 @@ def loadParameters():
 		Ga = 0.646
 		Gb = 0.500
 		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.044
 	elif mode == "2:diagonals":
 		Da = 0.010
@@ -283,6 +378,12 @@ def loadParameters():
 		Ga = 0.647
 		Gb = 0.500
 		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.426
 	elif mode == "2:nice_waves":
 		Da = 0.809
@@ -299,6 +400,12 @@ def loadParameters():
 		Ga = 0.284
 		Gb = 0.500
 		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.132
 	elif mode == "2:waves1":
 		Da = 0.397
@@ -315,6 +422,12 @@ def loadParameters():
 		Ga = 0.176
 		Gb = 0.500
 		Gc = 0.191
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.132
 	elif mode == "2:crossing_waves":
 		Da = 0.662
@@ -331,6 +444,12 @@ def loadParameters():
 		Ga = 0.000
 		Gb = 0.500
 		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.001
 	elif mode == "2:beauty_triangles":
 		Da = 0.809
@@ -347,6 +466,12 @@ def loadParameters():
 		Ga = 0.294
 		Gb = 0.500
 		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.132
 	elif mode == "2:ghosts":
 		Da = 0.824
@@ -363,6 +488,12 @@ def loadParameters():
 		Ga = 0.294
 		Gb = 0.154
 		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.206
 	elif mode == "2:dif_angle_lines":
 		Da = 0.809
@@ -379,6 +510,12 @@ def loadParameters():
 		Ga = 1.000
 		Gb = 0.500
 		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.235
 	elif mode == "3:stripes_n_waves":
 		Da = 0.004
@@ -395,6 +532,12 @@ def loadParameters():
 		Ga = 0.640
 		Gb = 0.500
 		Gc = 0.000
+		Pa = 0
+		Pb = 0
+		Pc = 0
+		Aa = 0.000
+		Ab = 0.000
+		Ac = 0.000
 		InitialNoise = 0.074
 		
 	DaSlider.set(Da) # Diffusion 
@@ -411,7 +554,13 @@ def loadParameters():
         GaSlider.set(Ga) # Initial concentration 
         GbSlider.set(Gb)
 	GcSlider.set(Gc)
-        InitialNoiseSlider.set(InitialNoise) # Initial noise 
+	PaSlider.set(Pa) # Initial concentration 
+        PbSlider.set(Pb)
+	PcSlider.set(Pc)
+	AaSlider.set(Aa) # Initial concentration 
+        AbSlider.set(Ab)
+	AcSlider.set(Ac)
+	InitialNoiseSlider.set(InitialNoise) # Initial noise 
 	activateSliders()
 
 # Enable all Sliders
@@ -470,6 +619,18 @@ def activateSliders():
 		GbSlider['fg'] = 'black'
 		GcSlider['state'] = off
 		GcSlider['fg'] = 'grey'
+		PaSlider['state'] = on
+		PaSlider['fg'] = 'black'
+		PbSlider['state'] = on
+		PbSlider['fg'] = 'black'
+		PcSlider['state'] = off
+		PcSlider['fg'] = 'grey'
+		AaSlider['state'] = on
+		AaSlider['fg'] = 'black'
+		AbSlider['state'] = on
+		AbSlider['fg'] = 'black'
+		AcSlider['state'] = off
+		AcSlider['fg'] = 'grey'
 		InitialNoiseSlider['state'] = on
 		InitialNoiseSlider['fg'] = 'black'
 	elif sliders == "2:act-sub":
@@ -501,6 +662,18 @@ def activateSliders():
 		GbSlider['fg'] = 'black'
 		GcSlider['state'] = off
 		GcSlider['fg'] = 'grey'
+		PaSlider['state'] = on
+		PaSlider['fg'] = 'black'
+		PbSlider['state'] = on
+		PbSlider['fg'] = 'black'
+		PcSlider['state'] = off
+		PcSlider['fg'] = 'grey'
+		AaSlider['state'] = on
+		AaSlider['fg'] = 'black'
+		AbSlider['state'] = on
+		AbSlider['fg'] = 'black'
+		AcSlider['state'] = off
+		AcSlider['fg'] = 'grey'
 		InitialNoiseSlider['state'] = on
 		InitialNoiseSlider['fg'] = 'black'
 	elif sliders == "3:ext act-in":
@@ -532,6 +705,18 @@ def activateSliders():
 		GbSlider['fg'] = 'black'
 		GcSlider['state'] = on
 		GcSlider['fg'] = 'black'
+		PaSlider['state'] = on
+		PaSlider['fg'] = 'black'
+		PbSlider['state'] = on
+		PbSlider['fg'] = 'black'
+		PcSlider['state'] = on
+		PcSlider['fg'] = 'black'
+		AaSlider['state'] = on
+		AaSlider['fg'] = 'black'
+		AbSlider['state'] = on
+		AbSlider['fg'] = 'black'
+		AcSlider['state'] = on
+		AcSlider['fg'] = 'black'
 		InitialNoiseSlider['state'] = on
 		InitialNoiseSlider['fg'] = 'black'
 		
@@ -542,6 +727,20 @@ def activateSliders():
 def initSubstance(substance, concentration):
 	for i in range(size):
 		substance[i, 0] = concentration + InitialNoise - (InitialNoise * random.random())/2 # add fluctuations around concentration 
+# Init a periodic structure 
+def initPeriodicSubstance(substance, concentration, period, amplitude): 
+	if period == 0:
+		period = size
+	i,j = 0,0
+	while(i<size):
+		for j in range(period):
+			if i< size:
+				substance[i, 0] = concentration + (amplitude/2) + InitialNoise - (InitialNoise * random.random())/2
+			i = i + 1
+		for j in range(period):
+			if i< size:
+				substance[i, 0] = concentration - (amplitude/2) + InitialNoise - (InitialNoise * random.random())/2
+			i = i + 1
 
 # Diffusion  
 def diffusion(substance, i, t):
@@ -639,9 +838,12 @@ def dummySnail():
 def executeSim():
 	activateSliders()
 	readSliders() 
-	initSubstance(a, Ga)
-	initSubstance(b, Gb)
-	initSubstance(c, Gc)
+#	initSubstance(a, Ga)
+#	initSubstance(b, Gb)
+#	initSubstance(c, Gc)
+	initPeriodicSubstance(a, Ga, Pa, Aa) 
+	initPeriodicSubstance(b, Gb, Pb, Ab) 
+	initPeriodicSubstance(c, Gc, Pc, Ac) 
 	mech = mechanism.get()
 	print_case = print_mode.get() 
 	if mech == "1:act-in": 
@@ -776,6 +978,28 @@ GbSlider = Tkinter.Scale(concen_control, from_=0, to=1, resolution = 0.001, leng
 GbSlider.pack(side="left")
 GcSlider = Tkinter.Scale(concen_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
 GcSlider.pack(side="left")
+# Initial period 
+period_control = Tkinter.Frame(snail_window)
+period_control.pack()
+period_label = Tkinter.Label(period_control, text="Init. period: ")
+period_label.pack(side="left")
+PaSlider = Tkinter.Scale(period_control, from_=0, to=size, resolution = 1, length=100, orient="horizontal")
+PaSlider.pack(side="left")
+PbSlider = Tkinter.Scale(period_control, from_=0, to=size, resolution = 1, length=100, orient="horizontal")
+PbSlider.pack(side="left")
+PcSlider = Tkinter.Scale(period_control, from_=0, to=size, resolution = 1, length=100, orient="horizontal")
+PcSlider.pack(side="left")
+# Initial amplitude 
+amp_control = Tkinter.Frame(snail_window)
+amp_control.pack()
+amp_label = Tkinter.Label(amp_control, text="Init. amp.: ")
+amp_label.pack(side="left")
+AaSlider = Tkinter.Scale(amp_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+AaSlider.pack(side="left")
+AbSlider = Tkinter.Scale(amp_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+AbSlider.pack(side="left")
+AcSlider = Tkinter.Scale(amp_control, from_=0, to=1, resolution = 0.001, length=100, orient="horizontal")
+AcSlider.pack(side="left")
 # Initial noise
 noise_control = Tkinter.Frame(snail_window)
 noise_control.pack()
@@ -798,7 +1022,7 @@ print_menu.pack(side="left")
 # Simulation parameter menu
 sim_parameters = Tkinter.StringVar(start_control) 
 sim_parameters.set("2:beauty_triangles") 
-SimMenu = Tkinter.OptionMenu(start_control, sim_parameters, "1:thin_lines", "1:stripes1", "1:stripes2", "1:waves_stripes", "1:dark_tri_waves", "1:triangles1", "1:bloody_tears", "1:hearts", "2:diagonals", "2:waves1", "2:nice_waves", "2:crossing_waves", "2:ghosts", "2:beauty_triangles", "2:dif_angle_lines", "3:caves", "3:chaos1", "3:stripes_n_waves") 
+SimMenu = Tkinter.OptionMenu(start_control, sim_parameters, "1:thin_lines", "1:stripes1", "1:stripes2", "1:waves1", "1:waves_stripes", "1:dark_tri_waves", "1:triangles1", "1:bloody_tears", "1:hearts", "2:diagonals", "2:waves1", "2:nice_waves", "2:crossing_waves", "2:ghosts", "2:beauty_triangles", "2:dif_angle_lines", "3:caves", "3:chaos1", "3:stripes_n_waves") 
 SimMenu.pack(side="left")
 # Load simulation button
 load_sim = Tkinter.Frame(snail_window) 

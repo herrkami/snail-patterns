@@ -319,6 +319,28 @@ def loadParameters():
 		Ab = 0.000
 		Ac = 0.000
 		InitialNoise = 0.001
+	elif mode == "1:conus_eb":
+		Da = 0.029
+		Db = 0.544
+		Dc = 0.000
+		Ra = 0.412
+		Rb = 0.471
+		Rc = 0.000
+		Ba = 0.456
+		Bb = 0.412
+		Sa = 0.000
+		Sb = 0.000
+		Ca = 0.206
+		Ga = 0.500
+		Gb = 0.500
+		Gc = 0.000
+		Pa = 30
+		Pb = 30
+		Pc = 0
+		Aa = 0.162
+		Ab = 0.147
+		Ac = 0.000
+		InitialNoise = 0.004
 	elif mode == "1:bloody_tears":
 		Da = 0.094
 		Db = 0.809
@@ -431,7 +453,7 @@ def loadParameters():
 		InitialNoise = 0.132
 	elif mode == "2:crossing_waves":
 		Da = 0.662
-		Db = 0.515
+		Db = 0.505
 		Dc = 0.000
 		Ra = 0.191
 		Rb = 0.265
@@ -1022,7 +1044,7 @@ print_menu.pack(side="left")
 # Simulation parameter menu
 sim_parameters = Tkinter.StringVar(start_control) 
 sim_parameters.set("2:beauty_triangles") 
-SimMenu = Tkinter.OptionMenu(start_control, sim_parameters, "1:thin_lines", "1:stripes1", "1:stripes2", "1:waves1", "1:waves_stripes", "1:dark_tri_waves", "1:triangles1", "1:bloody_tears", "1:hearts", "2:diagonals", "2:waves1", "2:nice_waves", "2:crossing_waves", "2:ghosts", "2:beauty_triangles", "2:dif_angle_lines", "3:caves", "3:chaos1", "3:stripes_n_waves") 
+SimMenu = Tkinter.OptionMenu(start_control, sim_parameters, "1:thin_lines", "1:stripes1", "1:stripes2", "1:waves1", "1:conus_eb", "1:waves_stripes", "1:dark_tri_waves", "1:triangles1", "1:bloody_tears", "1:hearts", "2:diagonals", "2:waves1", "2:nice_waves", "2:crossing_waves", "2:ghosts", "2:beauty_triangles", "2:dif_angle_lines", "3:caves", "3:chaos1", "3:stripes_n_waves") 
 SimMenu.pack(side="left")
 # Load simulation button
 load_sim = Tkinter.Frame(snail_window) 
